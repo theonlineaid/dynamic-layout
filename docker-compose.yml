@@ -1,0 +1,27 @@
+# version: '3.8'
+services:
+  react-app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev # Use a specific Dockerfile for development
+    ports:
+      - "4000:3000" # Map to Vite dev server port (3000 in your case)
+    volumes:
+      - ./src:/app/src # Enable live reload
+      - ./public:/app/public # Correct public directory mount
+      - ./package.json:/app/package.json # Mount package.json for any changes
+      - /app/node_modules # Ensure node_modules are handled correctly inside container
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+  react-app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod # Use the specific production Dockerfile
+    ports:
+      - "8080:80" # Map Nginx port 80 to host port 8080
+    volumes:
+      - /home/bdtask24-8/Documents/backup:/app
+    environment:
+      - NODE_ENV=production
