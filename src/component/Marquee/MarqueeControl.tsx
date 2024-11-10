@@ -6,6 +6,9 @@ import StopCircleSharpIcon from "@mui/icons-material/StopCircleSharp";
 import PlayCircleFilledWhiteSharpIcon from "@mui/icons-material/PlayCircleFilledWhiteSharp";
 import { Box, Typography, IconButton } from "@mui/material";
 import { useMarket } from "../../context/MarketContext";
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import ImportExportIcon from '@mui/icons-material/ImportExport';
 
 export default function MarqueeControl() {
   const { marketData } = useMarket(); // Access market data from context
@@ -18,7 +21,16 @@ export default function MarqueeControl() {
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", backgroundColor: "#333", borderRadius: "8px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "16px",
+        backgroundColor: "#333",
+        borderRadius: "8px",
+      }}
+    >
       {/* Marquee Component */}
       <Marquee
         pauseOnClick={true}
@@ -27,13 +39,47 @@ export default function MarqueeControl() {
         direction={direction}
         loop={0}
         speed={100}
-        style={{ flex: 1, color: "#fff", fontSize: "16px", marginRight: "16px" }}
+        style={{
+          flex: 1,
+          color: "#fff",
+          fontSize: "16px",
+          marginRight: "16px",
+        }}
       >
         {marketData.map((item, index) => (
-          <Box sx={{ display: "inline-flex", alignItems: "center", marginRight: "40px" }} key={index}>
+          <Box
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              marginRight: "40px",
+            }}
+            key={index}
+          >
+            {/* Status Icon */}
+            <Box sx={{ marginRight: "8px", display: "flex", alignItems: "center" }}>
+              {item.status === "Up" ? (
+                <TrendingUpIcon sx={{ color: "green", marginRight: "4px" }} />
+              ) : item.status === "Down" ? (
+                <TrendingDownIcon sx={{ color: "red", marginRight: "4px" }} />
+              ) : item.status === "Unchange" || item.status === "Nottrade" ? (
+                <ImportExportIcon sx={{ color: "gray", marginRight: "4px" }} />
+              ) : null}
+            </Box>
+
             {/* Change Icon */}
-            <Typography sx={{ color: item.chg >= 0 ? "green" : "red", fontWeight: "bold", marginRight: "8px" }}>
-              {item.chg >= 0 ? `▲ ${item.chg}` : `▼ ${item.chg}`}
+            <Typography
+              sx={{
+                color: item.chg >= 0 ? "green" : "red",
+                fontWeight: "bold",
+                marginRight: "8px",
+              }}
+            >
+              {item.chg >= 0 ? (
+                <TrendingUpIcon sx={{ marginRight: "4px" }} />
+              ) : (
+                <TrendingDownIcon sx={{ marginRight: "4px" }} />
+              )}
+              {item.chg}
             </Typography>
 
             {/* Ticker and Price */}
@@ -50,14 +96,20 @@ export default function MarqueeControl() {
       </Marquee>
 
       {/* Control Buttons */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: "8px", width: "auto" }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "2px" }}>
         {/* Left Arrow */}
-        <IconButton onClick={() => setDirection("left")} sx={{ color: "#fff", padding: "4px" }}>
+        <IconButton
+          onClick={() => setDirection("left")}
+          sx={{ color: "#fff", padding: "4px" }}
+        >
           <ArrowLeftSharpIcon />
         </IconButton>
 
         {/* Play/Pause Button */}
-        <IconButton onClick={togglePlay} sx={{ color: "#fff", padding: "4px" }}>
+        <IconButton
+          onClick={togglePlay}
+          sx={{ color: "#fff", padding: "4px" }}
+        >
           {isPlaying ? (
             <StopCircleSharpIcon />
           ) : (
@@ -66,7 +118,10 @@ export default function MarqueeControl() {
         </IconButton>
 
         {/* Right Arrow */}
-        <IconButton onClick={() => setDirection("right")} sx={{ color: "#fff", padding: "4px" }}>
+        <IconButton
+          onClick={() => setDirection("right")}
+          sx={{ color: "#fff", padding: "4px" }}
+        >
           <ArrowRightSharpIcon />
         </IconButton>
       </Box>
