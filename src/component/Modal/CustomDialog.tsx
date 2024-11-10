@@ -8,7 +8,7 @@ import Draggable from "react-draggable";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Fade, Slide } from "@mui/material";
+import { Fade } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 
 interface CustomDialogProps {

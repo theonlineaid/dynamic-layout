@@ -3,17 +3,17 @@ import { handleDragStart, handleDragStop, handleResizeStart, handleResizeStop, l
 import { Responsive, WidthProvider } from "react-grid-layout";
 import CustomDialog from "../component/Modal/CustomDialog";
 const ResponsiveGridLayout = WidthProvider(Responsive);
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
 
 const MasterLayout: React.FC = () => {
 
-  const [openModal, setOpenModal] = useState(false);  // State to control modal visibility
-  const [modalContent, setModalContent] = useState<string>("");  // Store the content for the modal
-
-  // Handle the click on grid header to show the modal
+  const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState<string>("");
   const handleHeaderClick = (headerContent: string) => {
     setModalContent(headerContent);
-    setOpenModal(true);  // Show the modal
+    setOpenModal(true);
   };
+
   return (
     <>
       <ResponsiveGridLayout
@@ -32,13 +32,14 @@ const MasterLayout: React.FC = () => {
       >
         {layoutConfig.map((item) => (
           <div className="grid-item" key={item.i}>
-            <div className="grid-header"> Header {item.i} </div>
-            <div  onClick={() => handleHeaderClick(`Header ${item.i}`)}>[]</div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", backgroundColor: "blue" }}>
+              <div className="grid-header"> Header {item.i} </div>
+              <div onClick={() => handleHeaderClick(`Header ${item.i}`)}><FullscreenIcon /></div>
+            </div>
             <div className="grid-content">Content {item.i}</div>
           </div>
         ))}
       </ResponsiveGridLayout>
-
 
       {/* Your custom modal */}
       <CustomDialog
