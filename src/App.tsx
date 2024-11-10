@@ -1,11 +1,12 @@
 import './App.css';
-import MasterLayout from './layout/MasterLayout'; 
+import MarqueeControl from './component/Marquee/MarqueeControl';
+import MasterLayout from './layout/MasterLayout';
 
 function App() {
   return (
     <>
+      <MarqueeControl />
       <MasterLayout />
-      {/* <h1>HI</h1> */}
     </>
   );
 }
