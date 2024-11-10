@@ -75,3 +75,10 @@ button:focus-visible {
   flex-direction: column;
 }
 
+
+.grid-header {
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  cursor: move; /* Show a move cursor to indicate draggable area */
+}
