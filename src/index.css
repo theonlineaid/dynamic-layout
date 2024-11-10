@@ -82,3 +82,12 @@ button:focus-visible {
   padding: 8px;
   cursor: move; /* Show a move cursor to indicate draggable area */
 }
+
+
+.layout.resizing .grid-item {
+  user-select: none;
+}
+
+.layout.dragging .grid-item {
+  user-select: none;
+}
