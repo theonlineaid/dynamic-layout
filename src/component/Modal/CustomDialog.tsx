@@ -32,13 +32,6 @@ const PaperComponent: React.FC = (props) => (
   </Draggable>
 );
 
-// const Transition = forwardRef(function Transition(
-//   props: TransitionProps & { children: React.ReactElement<any, any> },
-//   ref: React.Ref<unknown>
-// ) {
-//   return <Slide direction="left" ref={ref} {...props} />;
-// });
-
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement<any, any>; },
   ref: React.Ref<unknown>
@@ -63,7 +56,6 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
     setIsFullScreen(fullScreen);
   }, [fullScreen]);
 
-  // Handle fullscreen toggle
   const handleFullscreen = useCallback(() => {
     setIsFullScreen((prev) => {
       const newFullScreenState = !prev;
@@ -74,14 +66,12 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
     });
   }, [onFullScreenChange]);
 
-  // Reset full-screen mode when closing the dialog
-  // If need other wise don't need 
   const handleClose = () => {
-    setIsFullScreen(false); // Reset full-screen state
+    setIsFullScreen(false);
     if (onFullScreenChange) {
-      onFullScreenChange(false); // Notify parent that full-screen is false
+      onFullScreenChange(false);
     }
-    onClose(); // Call the provided onClose function
+    onClose();
   };
 
   const dialogTitleStyle = useMemo(
@@ -98,14 +88,14 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
       fullWidth
       maxWidth={isFullScreen ? undefined : maxWidth}
       open={open}
-      onClose={handleClose} // Use the new close handler
+      onClose={handleClose}
       PaperComponent={isDraggable && !isFullScreen ? PaperComponent : undefined}
       TransitionComponent={Transition}
       disableEscapeKeyDown
       aria-labelledby="draggable-dialog-title"
       sx={{
         "& .MuiDialog-paper": {
-          marginTop: isFullScreen ? "0" : "-40%",
+          marginTop: isFullScreen ? "0" : "0%",
         },
       }}
     >

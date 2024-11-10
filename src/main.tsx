@@ -18,6 +18,7 @@ import { Provider } from 'react-redux';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import Login from './pages/login/Login.tsx';
 import { PersistGate } from 'redux-persist/integration/react';
+import { MarketProvider } from './context/MarketContext.tsx';
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,6 @@ const router = createBrowserRouter([
     v7_normalizeFormMethod: true,
     v7_partialHydration: true,
     v7_skipActionErrorRevalidation: true,
-    
   },
 });
 
@@ -43,9 +43,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <RouterProvider router={router} future={{
-          v7_startTransition: true,
-        }} />
+        <MarketProvider>
+          <RouterProvider router={router} future={{ v7_startTransition: true}} />
+        </MarketProvider>
       </PersistGate>
     </Provider>
   </StrictMode>,
