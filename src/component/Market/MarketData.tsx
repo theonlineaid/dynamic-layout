@@ -17,6 +17,11 @@ const MarketData = () => {
   const gridRef = useRef<AgGridReact>(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<string>("material"); // Default theme
+
+  const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setTheme(event.target.value);
+  };
 
   const {
     filteredData,
@@ -105,10 +110,23 @@ const MarketData = () => {
             placeholder="Search or Select..."
           />
         </div>
-      </div>
 
+        <div>
+        <select
+          id="theme-selector"
+          value={theme}
+          onChange={handleThemeChange}
+          style={{ marginBottom: "20px", padding: "5px" }}
+        >
+          <option value="quartz">Quartz</option>
+          <option value="material">Material</option>
+          <option value="balham">Balham</option>
+          <option value="alpine">Alpine</option>
+        </select>
+      </div>
+      </div>
       <div
-        className="ag-theme-balham"
+        className={`ag-theme-${theme}-dark`}
         style={{ height: 400, width: "100%" }}
       >
         <AgGridReact
@@ -118,7 +136,7 @@ const MarketData = () => {
           defaultColDef={defaultColDef}
           suppressMenuHide={false}
           animateRows={false}
-          headerHeight={54}
+          headerHeight={35}
           rowHeight={30}
           // rowBuffer={300}
           rowSelection={rowSelection}

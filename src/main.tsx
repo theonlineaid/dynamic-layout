@@ -5,6 +5,22 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+// import "ag-grid-community/styles/ag-theme-quartz-dark.css";
+// import "ag-grid-community/styles/ag-theme-quartz-auto-dark.css";
+
+import "ag-grid-community/styles/ag-theme-balham.css";
+// import "ag-grid-community/styles/ag-theme-balham-dark.css";
+// import "ag-grid-community/styles/ag-theme-balham-auto-dark.css";
+
+import "ag-grid-community/styles/ag-theme-material.css";
+// import "ag-grid-community/styles/ag-theme-material-dark.css";
+// import "ag-grid-community/styles/ag-theme-material-auto-dark.css";
+
+
+import "ag-grid-community/styles/ag-theme-alpine.css";
+// import "ag-grid-community/styles/ag-theme-alpine-dark.css";
+// import "ag-grid-community/styles/ag-theme-alpine-auto-dark.css";
+
 import "./../node_modules/react-grid-layout/css/styles.css"
 import "./../node_modules/react-resizable/css/styles.css"
 import '@szhsin/react-menu/dist/index.css'
@@ -44,7 +60,7 @@ const router = createBrowserRouter([
   },
 });
 
-persistor.purge();
+// persistor.purge();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
