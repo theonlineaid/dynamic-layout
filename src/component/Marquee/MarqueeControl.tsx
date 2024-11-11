@@ -29,10 +29,15 @@ export default function MarqueeControl() {
         // padding: 0.5,
         // backgroundColor: "#333",
         borderRadius: "8px",
-        mx:"10px"
+        mx: "10px"
       }}
     >
-  
+
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5,  px: 0.4 }}>
+        <img height={'40px'} width={'40px'} src="https://i.ibb.co/DpK6Z0m/1673291260756.png" alt="Logo" />
+        <Typography>Onlineaid</Typography>
+      </Box>
+
       {/* Marquee Component */}
       <Marquee
         pauseOnClick={true}
@@ -40,7 +45,7 @@ export default function MarqueeControl() {
         play={isPlaying}
         direction={direction}
         loop={0}
-        speed={100}
+        speed={50}
         style={{
           flex: 1,
           color: "#fff",
@@ -61,11 +66,11 @@ export default function MarqueeControl() {
             {/* Status Icon */}
             <Box sx={{ marginRight: "8px", display: "flex", alignItems: "center" }}>
               {/* Conditional color based on status */}
-              <ImportExportIcon 
-                sx={{ 
-                  color: item.status === "Up" ? "green" : item.status === "Down" ? "red" : "gray", 
-                  marginRight: "4px" 
-                }} 
+              <ImportExportIcon
+                sx={{
+                  color: item.status === "Up" ? "green" : item.status === "Down" ? "red" : "gray",
+                  marginRight: "4px"
+                }}
               />
             </Box>
 
