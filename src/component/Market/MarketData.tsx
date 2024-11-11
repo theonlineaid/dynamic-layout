@@ -44,6 +44,12 @@ const MarketData = () => {
     setSelectedRowData(null);
   };
 
+  const showDetailsModal = useCallback((rowData: any) => {
+    setSelectedRowData(rowData);
+    setIsModalOpen(true);
+  }, []);
+
+
   const filteredGridData = useMemo(() => {
     if (!selectedShortName) return filteredData;
     return filteredData.filter(
@@ -80,8 +86,12 @@ const MarketData = () => {
     event.event.preventDefault();
   }, []);
 
-  const handleMenuOptionClick = (option: any) => {
-    alert(`Option selected: ${option}`);
+  const handleMenuOptionClick = (option: string) => {
+    if (option === "View Details" && selectedRowData) {
+      showDetailsModal(selectedRowData);
+    } else {
+      alert(`Option selected: ${option}`);
+    }
     setIsMenuOpen(false);
   };
   
@@ -171,9 +181,29 @@ const MarketData = () => {
         anchorPoint={menuPosition}
         state={isMenuOpen ? "open" : "closed"}
         onClose={() => setIsMenuOpen(false)}
+        menuStyle={{
+          cursor: 'move',
+          userSelect: 'none'
+        }}
+        onMouseDown={(e) => {
+          const menu = e.currentTarget;
+          const startX = e.clientX - menu.offsetLeft;
+          const startY = e.clientY - menu.offsetTop;
+
+          const onMouseMove = (e: any) => {
+            menu.style.left = `${e.clientX - startX}px`;
+            menu.style.top = `${e.clientY - startY}px`;
+          };
+
+          const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+          };
+
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        }}
       >
-        {/* <div>{selectedRowData?.full_name || "No name available"}</div> */}
-        {/* Display full_name in the menu if available */}
         <MenuItem disabled>
           {selectedRowData?.full_name || "No name available"}
         </MenuItem>
