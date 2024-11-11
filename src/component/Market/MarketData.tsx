@@ -1,21 +1,22 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { AgGridReact } from "ag-grid-react"; 
+import { useState, useMemo, useRef, useCallback } from "react";
+import { AgGridReact } from "ag-grid-react";
 import { useMarket } from "../../context/MarketContext";
 import { useBoardFilter } from "../../hooks/useBoardFilter";
 import { columnDefs, defaultColDef } from "./MarketUtils";
 import CustomDialog from "../Modal/CustomDialog";
 import { RowSelectionOptions } from "ag-grid-community";
 import InstrumentSearch from "./InstruementSelect";
+import { ControlledMenu, MenuItem } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css'
 
 const MarketData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<any>(null);
   const [selectedShortName, setSelectedShortName] = useState<string | null>(null);
-  const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number; y: number } | null>(null);
-  const [selectedInstrument, setSelectedInstrument] = useState<any>(null);
-
   const { marketData } = useMarket();
   const gridRef = useRef<AgGridReact>(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const {
     filteredData,
@@ -59,54 +60,30 @@ const MarketData = () => {
     }),
     []
   );
-
-  // Handle the context menu (right-click) event
-  const handleContextMenu = (event: any) => {
-    // Ensure that mouseEvent exists
-    const { mouseEvent, data, node, api } = event;
-    
-    if (mouseEvent) {
-      // Prevent the default browser context menu
-      mouseEvent.preventDefault(); // Prevent the default browser right-click menu
-      
-      const { clientX, clientY } = mouseEvent; // Access the mouse position
   
-      // Set the row data and context menu position
-      setSelectedRowData(data); // Set the selected row data
-      setSelectedInstrument(data); // Set the selected instrument for custom menu
-      setContextMenuPosition({ x: clientX, y: clientY }); // Set position for the menu
-  
-      // Manually select the row on right-click
-      if (api) {
-        api.deselectAll(); // Deselect any previously selected rows
-        node.setSelected(true); // Select the row that was right-clicked
-      }
-    } else {
-      // Handle the case where mouseEvent is not available (optional fallback logic)
-      console.warn('mouseEvent is undefined in contextMenu event');
+  const onCellContextMenu = useCallback((event: any) => {
+    const clickedRowNode = event.node;
+    if (gridRef.current && clickedRowNode) {
+      gridRef.current.api.deselectAll();
+      clickedRowNode.setSelected(true);
     }
+
+    // Set the selected row data for the menu
+    setSelectedRowData(clickedRowNode.data);
+    setMenuPosition({ x: event.event.clientX, y: event.event.clientY });
+    setIsMenuOpen(true);
+    event.event.preventDefault();
+  }, []);
+
+  const handleMenuOptionClick = (option: any) => {
+    alert(`Option selected: ${option}`);
+    setIsMenuOpen(false);
   };
   
-
-
-  // Hide context menu when clicking outside
-  const handleClickOutside = (event: any) => {
-    if (contextMenuPosition && !event.target.closest('.context-menu')) {
-      setContextMenuPosition(null); // Close the context menu
-    }
-  };
-
-  // Attach event listener for clicking outside
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [contextMenuPosition]);
 
   return (
     <>
-      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }} >
         <div>
           <select
             value={selectedBoard}
@@ -143,8 +120,7 @@ const MarketData = () => {
           animateRows={false}
           headerHeight={54}
           rowHeight={30}
-          rowBuffer={100}
-          suppressColumnVirtualisation={true}
+          rowBuffer={300}
           rowSelection={rowSelection}
           allowShowChangeAfterFilter={true}
           onRowClicked={onRowClicked}
@@ -152,94 +128,9 @@ const MarketData = () => {
           paginationPageSize={50}
           onCellDoubleClicked={onCellDoubleClicked}
           preventDefaultOnContextMenu={true}
-          onCellContextMenu={handleContextMenu} // Corrected handler
+          onCellContextMenu={onCellContextMenu} // Add right-click handler
         />
       </div>
-
-      {/* Custom Context Menu */}
-      {contextMenuPosition && selectedInstrument && (
-        <div
-          className="context-menu"
-          style={{
-            position: "absolute",
-            top: contextMenuPosition.y,
-            left: contextMenuPosition.x,
-            background: "white",
-            border: "1px solid #ccc",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            zIndex: 9999,
-            padding: "10px",
-            minWidth: "150px",
-            borderRadius: "5px",
-          }}
-        >
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            <li>
-              <button
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  textAlign: "left",
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                onClick={() => console.log("Option 1 selected")}
-              >
-                Option 1
-              </button>
-            </li>
-            <li>
-              <button
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  textAlign: "left",
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                onClick={() => console.log("Option 2 selected")}
-              >
-                Option 2
-              </button>
-            </li>
-            <li>
-              <button
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  textAlign: "left",
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                onClick={() => console.log("Option 3 selected")}
-              >
-                Option 3
-              </button>
-            </li>
-            <li>
-              <button
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  textAlign: "left",
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("View Row Data: ", selectedInstrument);
-                  setContextMenuPosition(null); // Close menu after action
-                }}
-              >
-                View Row Data
-              </button>
-            </li>
-          </ul>
-        </div>
-      )}
 
       {isModalOpen && (
         <CustomDialog
@@ -257,6 +148,20 @@ const MarketData = () => {
           </div>
         </CustomDialog>
       )}
+
+      <ControlledMenu
+        anchorPoint={menuPosition}
+        state={isMenuOpen ? "open" : "closed"}
+        onClose={() => setIsMenuOpen(false)}
+      >
+        {/* Display full_name in the menu if available */}
+        <MenuItem disabled>
+          {selectedRowData?.full_name || "No name available"}
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuOptionClick("Edit")}>Edit</MenuItem>
+        <MenuItem onClick={() => handleMenuOptionClick("Delete")}>Delete</MenuItem>
+        <MenuItem onClick={() => handleMenuOptionClick("View Details")}>View Details</MenuItem>
+      </ControlledMenu>
     </>
   );
 };

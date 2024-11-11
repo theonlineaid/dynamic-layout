@@ -1,4 +1,3 @@
-import React from "react";
 import { ColDef } from "ag-grid-community";
 import { MarketData } from "../../context/MarketContext";
 
@@ -61,9 +60,4 @@ export const defaultColDef = {
   minWidth: 100,
   enableCellChangeFlash: true,
   cellClass: 'align-right',
-};
-
-// Context menu handler to prevent default right-click behavior
-export const handleContextMenu = (event: React.MouseEvent) => {
-  event.preventDefault();
 };
