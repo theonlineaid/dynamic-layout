@@ -6,8 +6,8 @@ import StopCircleSharpIcon from "@mui/icons-material/StopCircleSharp";
 import PlayCircleFilledWhiteSharpIcon from "@mui/icons-material/PlayCircleFilledWhiteSharp";
 import { Box, Typography, IconButton } from "@mui/material";
 import { useMarket } from "../../context/MarketContext";
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+// import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+// import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 
 export default function MarqueeControl() {
@@ -26,11 +26,13 @@ export default function MarqueeControl() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "16px",
-        backgroundColor: "#333",
+        // padding: 0.5,
+        // backgroundColor: "#333",
         borderRadius: "8px",
+        mx:"10px"
       }}
     >
+  
       {/* Marquee Component */}
       <Marquee
         pauseOnClick={true}
@@ -49,21 +51,22 @@ export default function MarqueeControl() {
         {marketData.map((item, index) => (
           <Box
             sx={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
               marginRight: "40px",
+              justifyContent: 'center'
             }}
             key={index}
           >
             {/* Status Icon */}
             <Box sx={{ marginRight: "8px", display: "flex", alignItems: "center" }}>
-              {item.status === "Up" ? (
-                <TrendingUpIcon sx={{ color: "green", marginRight: "4px" }} />
-              ) : item.status === "Down" ? (
-                <TrendingDownIcon sx={{ color: "red", marginRight: "4px" }} />
-              ) : item.status === "Unchange" || item.status === "Nottrade" ? (
-                <ImportExportIcon sx={{ color: "gray", marginRight: "4px" }} />
-              ) : null}
+              {/* Conditional color based on status */}
+              <ImportExportIcon 
+                sx={{ 
+                  color: item.status === "Up" ? "green" : item.status === "Down" ? "red" : "gray", 
+                  marginRight: "4px" 
+                }} 
+              />
             </Box>
 
             {/* Change Icon */}
@@ -74,11 +77,7 @@ export default function MarqueeControl() {
                 marginRight: "8px",
               }}
             >
-              {item.chg >= 0 ? (
-                <TrendingUpIcon sx={{ marginRight: "4px" }} />
-              ) : (
-                <TrendingDownIcon sx={{ marginRight: "4px" }} />
-              )}
+              {item.chg >= 0 ? "+" : ""}
               {item.chg}
             </Typography>
 
