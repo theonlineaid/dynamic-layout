@@ -1,29 +1,34 @@
-import { StrictMode } from 'react'
+import { lazy, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-import "ag-grid-community/styles/ag-theme-quartz.css";
 
+// All Css in central zone 
+import './index.css'
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./../node_modules/react-grid-layout/css/styles.css"
 import "./../node_modules/react-resizable/css/styles.css"
+import '@szhsin/react-menu/dist/index.css'
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-
-import store, { persistor } from './app/store.ts';
-import { Provider } from 'react-redux';
+// Lazy component 
+import SuspenseWrapper from './component/Common/SuspenseWrapper.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
+const App = lazy(() => import('./App.tsx'))
 import Login from './pages/login/Login.tsx';
-import { PersistGate } from 'redux-persist/integration/react';
+
+import { Provider } from 'react-redux';
+import store, { persistor } from './app/store.ts';
 import { MarketProvider } from './context/MarketContext.tsx';
+import { PersistGate } from 'redux-persist/integration/react';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute> <App /> </ProtectedRoute>,
+    element: <ProtectedRoute>
+      <SuspenseWrapper>
+        <App />
+      </SuspenseWrapper>
+    </ProtectedRoute>,
   },
   {
     path: "/login",
@@ -44,7 +49,7 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <MarketProvider>
-          <RouterProvider router={router} future={{ v7_startTransition: true}} />
+          <RouterProvider router={router} future={{ v7_startTransition: true }} />
         </MarketProvider>
       </PersistGate>
     </Provider>

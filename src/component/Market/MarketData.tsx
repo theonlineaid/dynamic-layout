@@ -7,7 +7,7 @@ import CustomDialog from "../Modal/CustomDialog";
 import { RowSelectionOptions } from "ag-grid-community";
 import InstrumentSearch from "./InstruementSelect";
 import { ControlledMenu, MenuItem } from '@szhsin/react-menu';
-import '@szhsin/react-menu/dist/index.css'
+
 
 const MarketData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,7 +120,7 @@ const MarketData = () => {
           animateRows={false}
           headerHeight={54}
           rowHeight={30}
-          rowBuffer={300}
+          // rowBuffer={300}
           rowSelection={rowSelection}
           allowShowChangeAfterFilter={true}
           onRowClicked={onRowClicked}
@@ -154,6 +154,7 @@ const MarketData = () => {
         state={isMenuOpen ? "open" : "closed"}
         onClose={() => setIsMenuOpen(false)}
       >
+        {/* <div>{selectedRowData?.full_name || "No name available"}</div> */}
         {/* Display full_name in the menu if available */}
         <MenuItem disabled>
           {selectedRowData?.full_name || "No name available"}
