@@ -44,6 +44,8 @@ const router = createBrowserRouter([
   },
 });
 
+persistor.purge();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>

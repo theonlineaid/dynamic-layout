@@ -1,11 +1,16 @@
 import './App.css';
-import MarqueeControl from './component/Marquee/MarqueeControl';
+// import { lazy } from 'react';
+// import { CircularProgress } from '@mui/material';
 import MasterLayout from './layout/MasterLayout';
+// import SuspenseWrapper from './component/Common/SuspenseWrapper';
+// const MarqueeControl = lazy(() => import('./component/Marquee/MarqueeControl'))
 
 function App() {
   return (
     <>
-      <MarqueeControl />
+      {/* <SuspenseWrapper fallback={<CircularProgress />}>
+        <MarqueeControl />
+      </SuspenseWrapper> */}
       <MasterLayout />
     </>
   );

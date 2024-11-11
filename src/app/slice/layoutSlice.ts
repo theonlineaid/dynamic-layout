@@ -1,40 +1,31 @@
-// layoutSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+// layoutSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+import { layoutConfig } from '../../layout/layoutConflig';
 
-type Breakpoint = 'lg' | 'md' | 'sm' | 'xs' | 'xxs';
-
-interface LayoutItem {
-  i: string; // Item identifier
-  w: number; // Width
-  h: number; // Height
-  x: number; // X position
-  y: number; // Y position
-}
-
-interface LayoutState {
-  layouts: Record<Breakpoint, LayoutItem[]>; // layouts object should be indexed by breakpoint
-}
-
-const initialState: LayoutState = {
-  layouts: {
-    lg: [],
-    md: [],
-    sm: [],
-    xs: [],
-    xxs: [],
-  },
-};
+const initialState = layoutConfig
 
 const layoutSlice = createSlice({
-  name: 'layout',
-  initialState,
-  reducers: {
-    setLayout: (state, action: PayloadAction<{ breakpoint: Breakpoint; newLayout: LayoutItem[] }>) => {
-      const { breakpoint, newLayout } = action.payload;
-      state.layouts[breakpoint] = newLayout; // Update layout for the specific breakpoint
+    name: 'layout',
+    initialState,
+    reducers: {
+        updateGridItemHeight(state, action) {
+            const { id, height } = action.payload;
+            const gridItem = state.find(item => item.i === id);
+            if (gridItem) {
+                gridItem.h = height;
+            }
+        },
+        updateGridItemPosition(state, action) {
+            const { id, x, y } = action.payload;
+            const gridItem = state.find(item => item.i === id);
+            if (gridItem) {
+                gridItem.x = x;
+                gridItem.y = y;
+            }
+        },
     },
-  },
 });
 
-export const { setLayout } = layoutSlice.actions;
+export const { updateGridItemHeight, updateGridItemPosition } = layoutSlice.actions;
+
 export default layoutSlice.reducer;
