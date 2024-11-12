@@ -183,13 +183,12 @@ const MarketData = () => {
         onClose={() => setIsMenuOpen(false)}
         menuStyle={{
           cursor: 'move',
-          userSelect: 'none'
+          userSelect: 'none',
         }}
         onMouseDown={(e) => {
           const menu = e.currentTarget;
           const startX = e.clientX - menu.offsetLeft;
           const startY = e.clientY - menu.offsetTop;
-
           const onMouseMove = (e: any) => {
             menu.style.left = `${e.clientX - startX}px`;
             menu.style.top = `${e.clientY - startY}px`;

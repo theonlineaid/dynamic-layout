@@ -1,5 +1,4 @@
 import { Layout } from "react-grid-layout";
-
 // layoutConfig.js
 export const layoutConfig: Layout[] = [
     {
@@ -63,39 +62,9 @@ export const layoutConfig: Layout[] = [
         resizeHandles: ["se"],
         isBounded: false,
     },
-    // {
-    //     i: "e",
-    //     x: 10,
-    //     y: 0,
-    //     w: 1,
-    //     h: 2,
-    //     static: false,
-    //     isDraggable: true,
-    //     isResizable: true,
-    //     resizeHandles: ["ne", "se"],
-    //     isBounded: true,
-    // },
-    // {
-    //     i: "f",
-    //     x: 11,
-    //     y: 0,
-    //     w: 1,
-    //     h: 2,
-    //     static: false,
-    //     isDraggable: true,
-    //     isResizable: true,
-    //     resizeHandles: ["s", "w", "e", "n", "ne", "sw", "nw", "se"],
-    //     isBounded: false,
-    // },
+
 ];
 
-export const layouts = {
-    lg: layoutConfig,
-    md: layoutConfig,
-    sm: layoutConfig,
-    xs: layoutConfig,
-    xxs: layoutConfig,
-};
 
 
 export const handleResizeStart = () => {

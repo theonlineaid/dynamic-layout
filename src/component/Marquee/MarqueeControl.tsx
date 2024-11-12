@@ -33,10 +33,10 @@ export default function MarqueeControl() {
       }}
     >
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5,  px: 0.4 }}>
+      {/* <Box sx={{ display: "flex", alignItems: "center", gap: 0.5,  px: 0.4 }}>
         <img height={'40px'} width={'40px'} src="https://i.ibb.co/DpK6Z0m/1673291260756.png" alt="Logo" />
         <Typography>Onlineaid</Typography>
-      </Box>
+      </Box> */}
 
       {/* Marquee Component */}
       <Marquee

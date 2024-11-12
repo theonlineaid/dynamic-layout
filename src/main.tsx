@@ -21,8 +21,10 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 // import "ag-grid-community/styles/ag-theme-alpine-dark.css";
 // import "ag-grid-community/styles/ag-theme-alpine-auto-dark.css";
 
-import "./../node_modules/react-grid-layout/css/styles.css"
-import "./../node_modules/react-resizable/css/styles.css"
+// import "./../node_modules/react-grid-layout/css/styles.css"
+// import "./../node_modules/react-resizable/css/styles.css"
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import '@szhsin/react-menu/dist/index.css'
 
 // Lazy component 

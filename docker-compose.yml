@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev # Use a specific Dockerfile for development
     ports:
-      - "4000:3000" # Map to Vite dev server port (3000 in your case)
+      - "3000:3000" # Map to Vite dev server port (3000 in your case)
     volumes:
       - ./src:/app/src # Enable live reload
       - ./public:/app/public # Correct public directory mount

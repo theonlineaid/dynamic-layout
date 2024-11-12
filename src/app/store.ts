@@ -1,16 +1,15 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-// import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import storage from 'redux-persist/lib/storage';
 import authReducer from './slice/authSlice';
 import layoutReducer from './slice/layoutSlice';
-
 import { persistReducer, persistStore, REHYDRATE, PERSIST, REGISTER } from 'redux-persist'
-// import thunk from 'redux-thunk'
+
+// Your store setup looks good! Here's the same code with some minor improvements:
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'layout'], // Persist both auth and layout slices
+  whitelist: ['auth', 'layout'], // Good use of whitelist to selectively persist only needed slices
 };
 
 const rootReducer = combineReducers({
@@ -23,18 +22,17 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware(
-      {
-        serializableCheck: {
-          ignoredActions: [REHYDRATE, PERSIST, REGISTER],
-        },
-      }
-    )
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Correctly ignoring redux-persist actions for serialization check
+        ignoredActions: [REHYDRATE, PERSIST, REGISTER],
+      },
+    })
 });
 
+// Proper TypeScript type exports
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const persistor = persistStore(store);
-
 export default store;
