@@ -61,3 +61,6 @@ export const defaultColDef = {
   enableCellChangeFlash: true,
   cellClass: 'align-right',
 };
+export const handleContextMenu = (event: React.MouseEvent) => {
+  event.preventDefault();
+};

@@ -2,29 +2,30 @@ import { useState, useMemo, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useMarket } from "../../context/MarketContext";
 import { useBoardFilter } from "../../hooks/useBoardFilter";
-import { columnDefs, defaultColDef } from "./MarketUtils";
+import { columnDefs, defaultColDef, handleContextMenu } from "./MarketUtils";
 import CustomDialog from "../Modal/CustomDialog";
 import { RowSelectionOptions } from "ag-grid-community";
-import InstrumentSearch from "./InstruementSelect";
-import { ControlledMenu, MenuItem } from '@szhsin/react-menu';
-
+import { Menu, MenuItem } from "@mui/material";
+import ShortNameAutocomplete from "./ShortNameSelect";
 
 const MarketData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<any>(null);
-  const [selectedShortName, setSelectedShortName] = useState<string | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
   const { marketData } = useMarket();
   const gridRef = useRef<AgGridReact>(null);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<string>("material"); // Default theme
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [theme, setTheme] = useState<string>("material");
 
   const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setTheme(event.target.value);
   };
 
   const {
-    filteredData,
     availableBoards,
     selectedBoard,
     setSelectedBoard,
@@ -50,41 +51,36 @@ const MarketData = () => {
   }, []);
 
 
-  const filteredGridData = useMemo(() => {
-    if (!selectedShortName) return filteredData;
-    return filteredData.filter(
-      (data) => data.short_name === selectedShortName
-    );
-  }, [filteredData, selectedShortName]);
-
-  const handleShortNameChange = (selectedOption: any) => {
-    setSelectedShortName(selectedOption ? selectedOption.value : null);
-  };
-
   const rowSelection = useMemo<RowSelectionOptions | "single" | "multiple">(
     () => ({
       mode: "singleRow",
       checkboxes: false,
       enableClickSelection: true,
       enableSelectionWithoutKeys: true,
-      enableRightClickSelection: true
+      enableRightClickSelection: true,
     }),
     []
   );
-  
+
   const onCellContextMenu = useCallback((event: any) => {
+    event.event.preventDefault();
+    setContextMenu({
+      mouseX: event.event.clientX,
+      mouseY: event.event.clientY,
+    });
+
     const clickedRowNode = event.node;
     if (gridRef.current && clickedRowNode) {
       gridRef.current.api.deselectAll();
       clickedRowNode.setSelected(true);
     }
 
-    // Set the selected row data for the menu
     setSelectedRowData(clickedRowNode.data);
-    setMenuPosition({ x: event.event.clientX, y: event.event.clientY });
-    setIsMenuOpen(true);
-    event.event.preventDefault();
   }, []);
+
+  const handleMenuClose = () => {
+    setContextMenu(null);
+  };
 
   const handleMenuOptionClick = (option: string) => {
     if (option === "View Details" && selectedRowData) {
@@ -92,13 +88,19 @@ const MarketData = () => {
     } else {
       alert(`Option selected: ${option}`);
     }
-    setIsMenuOpen(false);
+    handleMenuClose();
   };
-  
+
+  const filteredData = useMemo(() => {
+    return marketData.map(item => ({
+      key: `${item.orderbook}`,
+      label: item.filter_name
+    }));
+  }, [marketData]);
 
   return (
     <>
-      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }} >
+      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }} onContextMenu={handleContextMenu} >
         <div>
           <select
             value={selectedBoard}
@@ -113,50 +115,44 @@ const MarketData = () => {
           </select>
         </div>
 
-        <div style={{ minWidth: "200px" }}>
-          <InstrumentSearch
-            marketData={marketData} // Pass marketData as a prop
-            onChange={handleShortNameChange}
-            placeholder="Search or Select..."
-          />
-        </div>
+        <ShortNameAutocomplete filteredData={filteredData}/>
 
         <div>
-        <select
-          id="theme-selector"
-          value={theme}
-          onChange={handleThemeChange}
-          style={{ marginBottom: "20px", padding: "5px" }}
-        >
-          <option value="quartz">Quartz</option>
-          <option value="material">Material</option>
-          <option value="balham">Balham</option>
-          <option value="alpine">Alpine</option>
-        </select>
-      </div>
+          <select
+            id="theme-selector"
+            value={theme}
+            onChange={handleThemeChange}
+            style={{ marginBottom: "20px", padding: "5px" }}
+          >
+            <option value="quartz">Quartz</option>
+            <option value="material">Material</option>
+            <option value="balham">Balham</option>
+            <option value="alpine">Alpine</option>
+          </select>
+        </div>
       </div>
       <div
         className={`ag-theme-${theme}-dark`}
         style={{ height: 400, width: "100%" }}
+        onContextMenu={handleContextMenu}
       >
         <AgGridReact
           ref={gridRef}
-          rowData={filteredGridData}
+          rowData={marketData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           suppressMenuHide={false}
           animateRows={false}
           headerHeight={35}
           rowHeight={30}
-          // rowBuffer={300}
           rowSelection={rowSelection}
           allowShowChangeAfterFilter={true}
           onRowClicked={onRowClicked}
           pagination={false}
           paginationPageSize={50}
           onCellDoubleClicked={onCellDoubleClicked}
+          onCellContextMenu={onCellContextMenu}
           preventDefaultOnContextMenu={true}
-          onCellContextMenu={onCellContextMenu} // Add right-click handler
         />
       </div>
 
@@ -177,30 +173,19 @@ const MarketData = () => {
         </CustomDialog>
       )}
 
-      <ControlledMenu
-        anchorPoint={menuPosition}
-        state={isMenuOpen ? "open" : "closed"}
-        onClose={() => setIsMenuOpen(false)}
-        menuStyle={{
-          cursor: 'move',
-          userSelect: 'none',
-        }}
-        onMouseDown={(e) => {
-          const menu = e.currentTarget;
-          const startX = e.clientX - menu.offsetLeft;
-          const startY = e.clientY - menu.offsetTop;
-          const onMouseMove = (e: any) => {
-            menu.style.left = `${e.clientX - startX}px`;
-            menu.style.top = `${e.clientY - startY}px`;
-          };
-
-          const onMouseUp = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-          };
-
-          document.addEventListener('mousemove', onMouseMove);
-          document.addEventListener('mouseup', onMouseUp);
+      <Menu
+        ref={menuRef}
+        open={contextMenu !== null}
+        onClose={handleMenuClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+        onContextMenu={(e) => {
+          e.preventDefault();
+          handleMenuClose();
         }}
       >
         <MenuItem disabled>
@@ -209,7 +194,7 @@ const MarketData = () => {
         <MenuItem onClick={() => handleMenuOptionClick("Edit")}>Edit</MenuItem>
         <MenuItem onClick={() => handleMenuOptionClick("Delete")}>Delete</MenuItem>
         <MenuItem onClick={() => handleMenuOptionClick("View Details")}>View Details</MenuItem>
-      </ControlledMenu>
+      </Menu>
     </>
   );
 };
