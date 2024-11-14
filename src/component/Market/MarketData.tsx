@@ -1,12 +1,12 @@
 import { useState, useMemo, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useMarket } from "../../context/MarketContext";
-import { useBoardFilter } from "../../hooks/useBoardFilter";
 import { columnDefs, defaultColDef, handleContextMenu } from "./MarketUtils";
 import CustomDialog from "../Modal/CustomDialog";
 import { RowSelectionOptions } from "ag-grid-community";
-import { Menu, MenuItem } from "@mui/material";
 import ShortNameAutocomplete from "./ShortNameSelect";
+import ContextMenuComponent from "./ContextMenuComponent";
+import AgTheme from "./AgTheme";
 
 const MarketData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,12 +24,6 @@ const MarketData = () => {
   const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setTheme(event.target.value);
   };
-
-  const {
-    availableBoards,
-    selectedBoard,
-    setSelectedBoard,
-  } = useBoardFilter(marketData);
 
   const onRowClicked = useCallback((event: any) => {
     console.log("Row Data: ", event.data);
@@ -49,7 +43,6 @@ const MarketData = () => {
     setSelectedRowData(rowData);
     setIsModalOpen(true);
   }, []);
-
 
   const rowSelection = useMemo<RowSelectionOptions | "single" | "multiple">(
     () => ({
@@ -101,35 +94,10 @@ const MarketData = () => {
   return (
     <>
       <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }} onContextMenu={handleContextMenu} >
-        <div>
-          <select
-            value={selectedBoard}
-            onChange={(e) => setSelectedBoard(e.target.value)}
-          >
-            <option value="">All Boards</option>
-            {availableBoards.map((board) => (
-              <option key={board} value={board}>
-                {board}
-              </option>
-            ))}
-          </select>
-        </div>
 
-        <ShortNameAutocomplete filteredData={filteredData}/>
+        <ShortNameAutocomplete filteredData={filteredData} />
+        <AgTheme theme={theme} handleThemeChange={handleThemeChange} />
 
-        <div>
-          <select
-            id="theme-selector"
-            value={theme}
-            onChange={handleThemeChange}
-            style={{ marginBottom: "20px", padding: "5px" }}
-          >
-            <option value="quartz">Quartz</option>
-            <option value="material">Material</option>
-            <option value="balham">Balham</option>
-            <option value="alpine">Alpine</option>
-          </select>
-        </div>
       </div>
       <div
         className={`ag-theme-${theme}-dark`}
@@ -173,28 +141,13 @@ const MarketData = () => {
         </CustomDialog>
       )}
 
-      <Menu
+      <ContextMenuComponent
         ref={menuRef}
-        open={contextMenu !== null}
-        onClose={handleMenuClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        onContextMenu={(e) => {
-          e.preventDefault();
-          handleMenuClose();
-        }}
-      >
-        <MenuItem disabled>
-          {selectedRowData?.full_name || "No name available"}
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuOptionClick("Edit")}>Edit</MenuItem>
-        <MenuItem onClick={() => handleMenuOptionClick("Delete")}>Delete</MenuItem>
-        <MenuItem onClick={() => handleMenuOptionClick("View Details")}>View Details</MenuItem>
-      </Menu>
+        contextMenu={contextMenu}
+        handleMenuClose={handleMenuClose}
+        selectedRowData={selectedRowData}
+        handleMenuOptionClick={handleMenuOptionClick}
+      />
     </>
   );
 };
