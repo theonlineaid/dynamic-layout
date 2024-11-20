@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useMarket } from "../../context/MarketContext";
 import { columnDefs, defaultColDef, handleContextMenu } from "./MarketUtils";
@@ -11,6 +11,7 @@ import AgTheme from "./AgTheme";
 const MarketData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<any>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;
@@ -25,8 +26,9 @@ const MarketData = () => {
     setTheme(event.target.value);
   };
 
-  const onRowClicked = useCallback((event: any) => {
-    console.log("Row Data: ", event.data);
+  // onRowClicked function to log row data or perform actions
+  const onRowClicked = useCallback((rowData: any) => {
+    console.log("Row Data: ", rowData);
   }, []);
 
   const onCellDoubleClicked = useCallback((event: any) => {
@@ -85,19 +87,38 @@ const MarketData = () => {
   };
 
   const filteredData = useMemo(() => {
-    return marketData.map(item => ({
+    return marketData.map((item) => ({
       key: `${item.orderbook}`,
-      label: item.filter_name
+      label: item.filter_name,
     }));
   }, [marketData]);
 
+  // Handle row selection when an item is selected in ShortNameAutocomplete
+  const handleAutocompleteSelect = (selectedKey: string | null) => {
+    console.log(selectedKey);
+    if (!selectedKey) return;
+
+    // Find the row data based on the selected key
+    const matchedRow = marketData.find(
+      (item) => `${item.orderbook}` === selectedKey
+    );
+    if (matchedRow) {
+      setSelectedRowData(matchedRow); // Update selectedRowData
+      onRowClicked(matchedRow); // Trigger the onRowClicked function with the matched row data
+    }
+  };
+
   return (
     <>
-      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }} onContextMenu={handleContextMenu} >
-
-        <ShortNameAutocomplete filteredData={filteredData} />
+      <div
+        style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
+        onContextMenu={handleContextMenu}
+      >
+        <ShortNameAutocomplete
+          filteredData={filteredData}
+          onChange={handleAutocompleteSelect} // Pass function to handle selection
+        />
         <AgTheme theme={theme} handleThemeChange={handleThemeChange} />
-
       </div>
       <div
         className={`ag-theme-${theme}-dark`}
@@ -115,7 +136,6 @@ const MarketData = () => {
           rowHeight={30}
           rowSelection={rowSelection}
           allowShowChangeAfterFilter={true}
-          onRowClicked={onRowClicked}
           pagination={false}
           paginationPageSize={50}
           onCellDoubleClicked={onCellDoubleClicked}

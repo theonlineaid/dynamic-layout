@@ -78,9 +78,9 @@ const layoutSlice = createSlice({
     initialState,
     reducers: {
         // Set the layout configuration properly by mutating the state directly
-        setLayouts: (state, action) => {
+        setLayouts: () => {
             // Update each breakpoint's layout with the new configuration
-            return state = action.payload;
+            return
         },
     },
 });
