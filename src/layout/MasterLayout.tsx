@@ -1,42 +1,40 @@
 import React, { lazy, Suspense, useState } from "react";
-import { handleDragStart, handleDragStop, handleResizeStart, handleResizeStop } from "./layoutConflig";
+import {
+  handleDragStart,
+  handleDragStop,
+  handleResizeStart,
+  handleResizeStop,
+} from "./layoutConflig";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import CustomDialog from "../component/Modal/CustomDialog";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import { CircularProgress, LinearProgress } from "@mui/material";
-import { initialState, layoutConfig, selectLayouts } from "../app/slice/layoutSlice";
-import { useAppSelector } from "../hooks/useRedux";
-// import { useAppSelector } from "../hooks/useRedux";
-// import { selectLayouts } from "../app/slice/layoutSlice";
+import { getLayout, layoutConfig } from "../app/slice/layoutSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 
-const MarketData = lazy(() => import('../component/Market/MarketData'));
+const MarketData = lazy(() => import("../component/Market/MarketData"));
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
 
 const MasterLayout: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
-  // const layout = useAppSelector(selectLayouts);
-  const layout = useAppSelector(selectLayouts);
-  console.log('layout', layout);
-  
-  // const layouts = {
-  //   lg: layoutConfig,
-  //   md: layoutConfig,
-  //   sm: layoutConfig,
-  //   xs: layoutConfig,
-  //   xxs: layoutConfig,
-  // };
-
+  const layout = useAppSelector((state) => state.layout);
+  const dispatch = useAppDispatch();
 
   const handleHeaderClick = () => {
     setOpenModal(true);
   };
 
+  const getTableData = () => {
+    dispatch(getLayout());
+  };
+
+  console.log(getTableData);
+
   return (
     <>
       <ResponsiveGridLayout
         className="layout"
-        layouts={initialState}
+        layouts={layout}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 2, md: 2, sm: 2, xs: 2, xxs: 1 }}
         rowHeight={1}
@@ -49,9 +47,18 @@ const MasterLayout: React.FC = () => {
       >
         {layoutConfig.map((item) => (
           <div className="grid-item" key={item.i}>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", backgroundColor: "#141414" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: "#141414",
+              }}
+            >
               <div className="grid-header"> Header {item.i} </div>
-              <div onClick={() => handleHeaderClick()}><FullscreenIcon /></div>
+              <div onClick={() => handleHeaderClick()}>
+                <FullscreenIcon />
+              </div>
             </div>
             <div className="grid-content">
               <Suspense fallback={<LinearProgress color="success" />}>

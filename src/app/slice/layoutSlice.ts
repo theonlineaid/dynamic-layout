@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Layout } from 'react-grid-layout';
-import { RootState } from '../store';
 
 // Define the initial layoutConfig as a constant (you can use the same layoutConfig as before)
 export const layoutConfig: Layout[] = [
@@ -63,7 +62,7 @@ export const layoutConfig: Layout[] = [
 ];
 
 // Define initial state based on the layoutConfig
-export const initialState = {
+const initialState = {
     lg: layoutConfig,
     md: layoutConfig,
     sm: layoutConfig,
@@ -77,17 +76,12 @@ const layoutSlice = createSlice({
     name: 'layout',
     initialState,
     reducers: {
-        // Set the layout configuration properly by mutating the state directly
-        setLayouts: () => {
-            // Update each breakpoint's layout with the new configuration
-            return
-        },
+        getLayout(state) {
+            return state
+        }
     },
 });
 
-export const { setLayouts } = layoutSlice.actions;
-
-// Selector to access layouts from the Redux state
-export const selectLayouts = (state: RootState) => state;
+export const { getLayout } = layoutSlice.actions;
 
 export default layoutSlice.reducer;
