@@ -9,8 +9,8 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import CustomDialog from "../component/Modal/CustomDialog";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import { CircularProgress, LinearProgress } from "@mui/material";
-import { getLayout, layoutConfig } from "../app/slice/layoutSlice";
-import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
+import {  layoutConfig } from "../app/slice/layoutSlice";
+import {  useAppSelector } from "../hooks/useRedux";
 
 const MarketData = lazy(() => import("../component/Market/MarketData"));
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -18,17 +18,10 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const MasterLayout: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const layout = useAppSelector((state) => state.layout);
-  const dispatch = useAppDispatch();
 
   const handleHeaderClick = () => {
     setOpenModal(true);
   };
-
-  const getTableData = () => {
-    dispatch(getLayout());
-  };
-
-  console.log(getTableData);
 
   return (
     <>

@@ -13,6 +13,57 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ag-theme-quartz {
+  --ag-header-column-separator-display: block;
+  --ag-header-column-separator-height: 100%;
+  --ag-header-column-separator-width: 2px;
+  --ag-header-column-separator-color: purple;
+
+  --ag-header-column-resize-handle-display: block;
+  --ag-header-column-resize-handle-height: 25%;
+  --ag-header-column-resize-handle-width: 5px;
+  --ag-header-column-resize-handle-color: orange;
+}
+
+.ag-theme-quartz,
+.ag-theme-quartz-dark {
+    --ag-header-column-separator-display: block;
+    --ag-header-column-separator-height: 100%;
+    --ag-header-column-separator-width: 2px;
+    --ag-header-column-separator-color: purple;
+
+    --ag-header-column-resize-handle-display: block;
+    --ag-header-column-resize-handle-height: 25%;
+    --ag-header-column-resize-handle-width: 5px;
+    --ag-header-column-resize-handle-color: orange;
+}
+.ag-theme-quartz .ag-header {
+  font-family: cursive;
+}
+.ag-theme-quartz .ag-header-group-cell {
+  font-weight: normal;
+  font-size: 22px;
+}
+.ag-theme-quartz .ag-header-cell {
+  font-size: 18px;
+}
+
+.ag-header-cell-menu-button {
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease; /* Smooth fade-in/out */
+}
+
+.ag-header-cell:hover .ag-header-cell-menu-button {
+  opacity: 1; /* Show on hover */
+}
+
+.rag-red {
+  background-color: #cc222244;
+}
+.rag-green {
+  background-color: #33cc3344;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

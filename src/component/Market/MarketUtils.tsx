@@ -3,7 +3,7 @@ import { MarketData } from "../../context/MarketContext";
 
 // Static column definitions, moved outside the component
 export const columnDefs: ColDef<MarketData>[] = [
-  { headerName: "ID", field: "id", enableCellChangeFlash: true },
+  { headerName: "ID", field: "id", enableCellChangeFlash: true, rowDrag: true },
   { headerName: "Session", field: "session" },
   { headerName: "Ticker", field: "ticker" },
   { headerName: "Short Name", field: "short_name" },
@@ -20,8 +20,8 @@ export const columnDefs: ColDef<MarketData>[] = [
   { headerName: "AQ", field: "aq", filter: "agNumberColumnFilter" },
   { headerName: "DL", field: "dl", filter: "agNumberColumnFilter" },
   { headerName: "DH", field: "dh", filter: "agNumberColumnFilter" },
-  { headerName: "Bid", field: "bid", filter: "agNumberColumnFilter" },
-  { headerName: "Ask", field: "ask", filter: "agNumberColumnFilter" },
+  { headerName: "Bid", field: "bid", filter: "agNumberColumnFilter" , enableCellChangeFlash: true },
+  { headerName: "Ask", field: "ask", filter: "agNumberColumnFilter", enableCellChangeFlash: true },
   { headerName: "Open", field: "open", filter: "agNumberColumnFilter" },
   { headerName: "Reference", field: "reference", filter: "agNumberColumnFilter" },
   { headerName: "Last", field: "last", filter: "agNumberColumnFilter" },
@@ -52,15 +52,26 @@ export const columnDefs: ColDef<MarketData>[] = [
   // { headerName: "Stream ID", field: "stream_id" },
 ];
 
+
+// type ColumnMenuTab = 
+//       'filterMenuTab' 
+//     | 'generalMenuTab' 
+//     | 'columnsMenuTab'
+
 // Static default column definition, also moved outside the component
 export const defaultColDef = {
   sortable: true,
   filter: true,
+  // filter: 'agTextColumnFilter',
+  floatingFilter: true,
   resizable: true,
   minWidth: 100,
   enableCellChangeFlash: true,
   cellClass: 'align-right',
+  editable: false
+  // menuTabs: ["generalMenuTab", "columnsMenuTab"]
 };
 export const handleContextMenu = (event: React.MouseEvent) => {
   event.preventDefault();
 };
+
